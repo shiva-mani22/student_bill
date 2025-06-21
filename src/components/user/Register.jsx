@@ -4,7 +4,8 @@ import { FaRegUserCircle } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { IoRepeat } from "react-icons/io5";
-
+import {validatePassword} from "val-pass"
+import toast from "react-hot-toast"
 const Register = () => {
   const [formData,setFormData]=useState({
   name:'',
@@ -12,22 +13,52 @@ const Register = () => {
   email:'',
   password:''
 });
+
+const [matched,setMatched]=useState(true)
+
+const [errorMessage,setErrorMessage]=useState("")
+
 let handelChange=(e)=>{
   let {name,value}=e.target
   setFormData((prev)=>({...prev,[name]:value}))
+  if(name=="password"){
+    let {validateAll,getAllValidationErrorMessage}=validatePassword(value,8)
+  validateAll()?setErrorMessage(""):setErrorMessage(getAllValidationErrorMessage())
+  value==""&&setErrorMessage("")}
 }
 let handelSubmit=(e)=>{
   e.preventDefault()
+   let {name,userName,password,email}=formData
+    if(!name||!userName||!password||!email){
+      toast.error("All feilds are mandatory")
+      return
+    }
+     let {validateAll,getAllValidationErrorMessage}=validatePassword(password)
+    if(!validateAll()){
+      toast.error(`${getAllValidationErrorMessage()}`)
+    }
+    if(!matched){
+      toast.error("passsword and confirm password did not match")
+     return
+    }
   console.log(formData);
   
+}
+
+const handelCheckPassword=(e)=>{
+  let {value}=e.target
+  formData.password!=value?setMatched(false):setMatched(true)
+  value=="" && setMatched(true)
+
+
 }
   return (
     <div className='flex items-center justify-center bg-gray-300 size-full'>
       <form action="" className='bg-white flex flex-col justify-center px-10 items-center w-1/2 h-3/4 gap-8 rounded-lg 
-      drop-shadow-lg max-sm:w-[90%]' onSubmit={handelSubmit}>
+      drop-shadow-lg max-sm:w-[90%] overflow-hidden' onSubmit={handelSubmit}>
         <div className='w-full flex items-center justify-center font-bold  '>
           <h1 className='text-3xl max-sm:text-[25px]'>Registration Form</h1>
-          </div>
+        </div>
         <div className='border-2 w-full flex items-center justify-center rounded-sm'>
           <input type="text" placeholder='Enter Name' name='name' className='outline-none px-3 w-full'  onChange={handelChange}/>
           <span className='pr-1.5'><BiRename /></span>
@@ -44,12 +75,15 @@ let handelSubmit=(e)=>{
           <input type="password" placeholder='Enter Password' name='password' className='outline-none px-3 w-full' onChange={handelChange}/>
           <span className='pr-1.5'><RiLockPasswordFill /></span>
         </div>
-        <div className='border-2 w-full flex items-center justify-center rounded-sm'>
-          <input type="password" placeholder='Re-Enter Password' className='outline-none px-3 w-full'/>
+        <div className={errorMessage?'w-full flex justify-center items-center px-2':'hidden'}>
+          <span className='text-red-700'>*{errorMessage}</span>
+        </div>
+        <div className={`border-2 w-full flex items-center justify-center rounded-sm ${matched?'border-black':'border-red-700'}` }>
+          <input type="password" placeholder='Re-Enter Password' className='outline-none px-3 w-full' onChange={handelCheckPassword}/>
           <span className='pr-1.5'><IoRepeat /></span>
         </div>
         <div className='border-2 w-full flex items-center justify-center bg-black'>
-          <button className='text-white w-full'>Click</button>
+          <button className='text-white w-full tracking-widest'>Click</button>
         </div>
       </form>
     </div>
