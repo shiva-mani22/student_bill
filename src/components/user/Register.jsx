@@ -6,7 +6,12 @@ import { RiLockPasswordFill } from "react-icons/ri";
 import { IoRepeat } from "react-icons/io5";
 import {validatePassword} from "val-pass"
 import toast from "react-hot-toast"
+import empServices from '../../service/empService';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 const Register = () => {
+const navigate=useNavigate()
+
   const [formData,setFormData]=useState({
   name:'',
   userName:'',
@@ -28,8 +33,8 @@ let handelChange=(e)=>{
 }
 let handelSubmit=(e)=>{
   e.preventDefault()
-   let {name,userName,password,email}=formData
-    if(!name||!userName||!password||!email){
+   let {name,userName,email,password}=formData
+    if(!name||!userName||!email||!password){
       toast.error("All feilds are mandatory")
       return
     }
@@ -40,8 +45,27 @@ let handelSubmit=(e)=>{
     if(!matched){
       toast.error("passsword and confirm password did not match")
      return
+    };
+   
+    
+    (async()=>{
+      let data=await empServices.regiUser(formData)
+      console.log(data);
+      
+      try {
+        if(data.status==201){
+          toast.success("registered succesfully")
+          navigate("/login")
+        }
+        else {
+        toast.error("something went wrong")
+        }
+      } catch (error) {
+        toast.error("something went wrong")
+      }
     }
-  console.log(formData);
+  )()
+  // console.log(formData);
   
 }
 
