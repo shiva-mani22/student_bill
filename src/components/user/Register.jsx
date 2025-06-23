@@ -8,7 +8,7 @@ import {validatePassword} from "val-pass"
 import toast from "react-hot-toast"
 import empServices from '../../service/empService';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 const Register = () => {
 const navigate=useNavigate()
 
@@ -55,7 +55,7 @@ let handelSubmit=(e)=>{
       try {
         if(data.status==201){
           toast.success("registered succesfully")
-          navigate("/login")
+          navigate("/")
         }
         else {
         toast.error("something went wrong")

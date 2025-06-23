@@ -11,6 +11,16 @@ let empServices={
         } catch (error) {
             return error
         }
+    },
+    loginUser: async(payload)=>{
+        try {
+            let data=axiosInstance.post("/login",payload)
+            console.log(data);
+            
+            return data
+        } catch (error) {
+            return error
+        }
     }
 }
 

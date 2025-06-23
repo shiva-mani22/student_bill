@@ -3,12 +3,14 @@ import { validatePassword } from 'val-pass';
 import { MdEmail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
 import toast from 'react-hot-toast';
+import { Link, useNavigate } from 'react-router-dom';
+import empServices from '../../service/empService';
 const Login = () => {
    const [formData,setFormData]=useState({
     email:'',
     password:''
   });
-  
+  const navigate=useNavigate()
   let handelChange=(e)=>{
     let {name,value}=e.target
     setFormData((prev)=>({...prev,[name]:value}))
@@ -21,6 +23,24 @@ let handelSubmit=(e)=>{
       toast.error("All feilds are mandatory")
       return
     }
+
+    (async()=>{
+      let data=await empServices.loginUser(formData)
+      console.log(data);
+      
+      try {
+        if(data.status==200){
+          toast.success("login succesfully")
+          navigate("/home")
+        }
+        else {
+        toast.error(`${data.response.data.message}`)
+        }
+      } catch (error) {
+        toast.error("something went wrong")
+      }
+    }
+  )()
 }
 
   return (
@@ -42,6 +62,11 @@ let handelSubmit=(e)=>{
             <div className='border-2 w-full flex items-center justify-center bg-black hover:bg-[#555] active:bg-blue-600 active:scale-[0.9]'>
               <button className='text-white w-full tracking-widest'>Click</button>
             </div>
+
+            <div className='hover:underline hover:text-blue-600'>
+          <Link to="register">Click here for Register</Link>
+        </div>
+
           </form>
         </div>
   )
