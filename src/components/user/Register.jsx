@@ -106,7 +106,7 @@ const handelCheckPassword=(e)=>{
           <input type="password" placeholder='Re-Enter Password' className='outline-none px-3 w-full' onChange={handelCheckPassword}/>
           <span className='pr-1.5'><IoRepeat /></span>
         </div>
-        <div className='border-2 w-full flex items-center justify-center bg-black'>
+        <div className='border-2 w-full flex items-center justify-center bg-black  hover:bg-[#555] active:bg-blue-600 active:scale-[0.9]'>
           <button className='text-white w-full tracking-widest'>Click</button>
         </div>
       </form>
