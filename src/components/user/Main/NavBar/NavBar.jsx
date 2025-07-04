@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import { TfiMenuAlt } from "react-icons/tfi";
 import { FaRegWindowClose } from "react-icons/fa";
 
@@ -18,18 +18,19 @@ const NavBar = () => {
             }
            
         </div>
-        
+
         <div className={`max-sm:hidden${show?'block':""}`}>
-            <Link to="/home">Home</Link>
+            <NavLink to="/home">Home</NavLink>
         </div>
         <div className={`max-sm:hidden${show?'block':""}`}>
-            <Link to="addBills">Add Bills</Link>
+            <NavLink to="addBills">Add Bills</NavLink>
+            
         </div>
         <div className={`max-sm:hidden${show?'block':""}`}>
-            <Link to="filterBills">Filter Bills</Link>
+            <NavLink to="filterBills">Filter Bills</NavLink>
         </div>
         <div className={`max-sm:hidden${show?'block':""}`}>
-            <Link to="about">About</Link>
+            <NavLink to="about">About</NavLink>
         </div>
     </div>
   )
