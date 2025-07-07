@@ -15,28 +15,82 @@ const AddBills = () => {
 
   const [items,setItems]=useState([])
 
-  const handelClick=()=>{
-    let newObj={
-      id:Date.now()
-      
-    }
-    setItems((preval)=>([...preval,newObj]))
-  }
-  
-   const removeElement=(id)=>{
-setItems(items.filter((val)=>val.id!=id))
-  }
-
   const handelChange=(e)=>{
     let {name,value}=e.target
     setBill((preVal)=>({...preVal,[name]:value}))
   }
-  const handelSubmit=(e)=>{
+
+  const handelClick=()=>{
+    let newObj={
+      id:Date.now(),
+        description:"",
+        quantity:"",
+        rate:"",
+        amount:"",
+        cgstPercent:"",
+        sgstPercent:""
+    }
+    setItems((preval)=>([...preval,newObj]))
+  }
+  
+ 
+
+ const handelSubmit=(e)=>{
     e.preventDefault()
-    console.log(bill);
+    // console.log(bill);
+    // console.log(items);
+    let {companyName,workCompletionDate,PoNo,address,PAN,GSTNo,clientBankName}=bill
+    let totalAmount=items.reduce((acc,val)=>{
+      const base=parseInt(val.amount)
+      const cgst=base*parseInt(val.cgstPercent)/100
+      const sgst=base*parseInt(val.sgstPercent)/100
+
+      // console.log(base,cgst,sgst,acc);
+      
+      return acc+base+cgst+sgst
+    },0)
+    let payload={
+      companyName,
+      workCompletionDate,
+      PoNo,
+      address,
+      PAN,
+      GSTNo,
+      clientBankName,
+      items,
+      totalAmount
+    }
+    console.log(payload);
     
+
   }
 
+  // console.log(new Date().toISOString().split("T")[0]);
+  
+  const removeElement=(id)=>{
+setItems(items.filter((val)=>val.id!=id))
+  }
+
+  
+const updateElements = (id, name, value) => {
+  setItems((prevItems) =>
+    prevItems.map((item) => {
+      if (item.id === id) {
+        const updatedItem = {
+          ...item,
+          [name]: value
+        };
+
+        const rate = parseFloat(updatedItem.rate) || 0;
+        const quantity = parseFloat(updatedItem.quantity) || 0;
+        updatedItem.amount = rate * quantity;
+
+        return updatedItem;
+      }
+      return item;
+    })
+  );
+};
 
 
   return (
@@ -101,7 +155,7 @@ setItems(items.filter((val)=>val.id!=id))
              {
               items.map((val)=><Items key={val.id}
                removeElement={removeElement}
-               val={val}>
+               val={val} updateElements={updateElements}>
                 
                </Items>)
             }

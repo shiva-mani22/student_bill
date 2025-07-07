@@ -5,25 +5,15 @@ import { GiPriceTag } from "react-icons/gi";
 import { PiSealPercentLight } from "react-icons/pi";
 import { PiSealPercentThin } from "react-icons/pi";
 import { HiDocumentRemove } from "react-icons/hi";
-const Items = ({removeElement,val}) => {
-
-    const [item,setItem]=useState({
-        description:"",
-        quantity:"",
-        rate:"",
-        amount:"",
-        cgstPercent:"",
-        sgstPercent:""
-    })
-   const handelChange=()=>{
-        let [name,value]=e.target
-        setItem((preval)=>({...preval,[name]:value}))
+const Items = ({removeElement,val,updateElements}) => {
+  console.log(val);
+  
+   
+   const handelChange=(e)=>{
+       let {name,value}=e.target
+       updateElements(val.id,name,value)
     }
-    const handelSubmit=()=>{
-        e.preventDefault()
-        console.log(item);
-        
-    }
+  
 
   return (
     <>
@@ -45,6 +35,8 @@ const Items = ({removeElement,val}) => {
           name='description'
           placeholder='Enter description'
           className='outline-none w-full h-[30px]'
+          value={val.description}
+          onChange={handelChange}
         />
         <LiaAudioDescriptionSolid />
       </div>
@@ -55,6 +47,8 @@ const Items = ({removeElement,val}) => {
           name='quantity'
           placeholder='Enter quantity'
           className='outline-none w-full h-[30px]'
+          value={val.quantity}
+          onChange={handelChange}
         />
         <RiSortNumberDesc />
       </div>
@@ -64,8 +58,9 @@ const Items = ({removeElement,val}) => {
           type='number'
           name='rate'
           placeholder='Enter rate'
-
           className='outline-none w-full h-[30px]'
+          value={val.rate}
+          onChange={handelChange}
         />
         <GiPriceTag />
       </div>
@@ -75,8 +70,9 @@ const Items = ({removeElement,val}) => {
           type='number'
           name='cgstPercent'
           placeholder='Enter CGST %'
-
           className='outline-none w-full h-[30px]'
+          value={val.cgstPercent}
+          onChange={handelChange}
         />
         <PiSealPercentLight />
       </div>
@@ -86,8 +82,9 @@ const Items = ({removeElement,val}) => {
           type='number'
           name='sgstPercent'
           placeholder='Enter SGST %'
-
           className='outline-none w-full h-[30px]'
+          value={val.sgstPercent}
+          onChange={handelChange}
         />
         <PiSealPercentThin />
       </div>
