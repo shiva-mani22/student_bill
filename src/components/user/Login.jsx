@@ -1,46 +1,56 @@
-import React, { useState } from 'react'
-import { validatePassword } from 'val-pass';
+import React, { useState , useContext } from 'react'
 import { MdEmail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
 import toast from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom';
 import empServices from '../../service/empService';
+import { contextApi } from '../context/Context';
 const Login = () => {
    const [formData,setFormData]=useState({
     email:'',
     password:''
   });
+
+
   const navigate=useNavigate()
+
+
   let handelChange=(e)=>{
     let {name,value}=e.target
     setFormData((prev)=>({...prev,[name]:value}))
   }
 
-let handelSubmit=(e)=>{
-  e.preventDefault()
-   let {email,password}=formData
-    if(!email||!password){
+const {globalState, setGlobalState } = useContext(contextApi);
+
+const handelSubmit=e=>{
+    e.preventDefault()
+    let {password,email}=formData
+    if(!password||!email){
       toast.error("All feilds are mandatory")
       return
     }
+    
+    // console.log(formData);
+    
+(async()=>{
+let data=await empServices.loginUser(formData)
+// console.log(data);
 
-    (async()=>{
-      let data=await empServices.loginUser(formData)
-      console.log(data);
-      
-      try {
-        if(data.status==200){
-          toast.success("login succesfully")
-          navigate("/home")
-        }
-        else {
-        toast.error(`${data.response.data.message}`)
-        }
-      } catch (error) {
-        toast.error("something went wrong")
-      }
-    }
-  )()
+try {
+  if(data.status==200){
+  toast.success("Login successfully")
+
+  setGlobalState((preVal)=>({...preVal,token:data.data.token}))
+  
+  
+  navigate("/home")
+}else{
+  toast.error(`${data.response.data.message}`)
+}
+} catch (error) {
+  toast.error("Something went wrong")
+}
+})()
 }
 
   return (
