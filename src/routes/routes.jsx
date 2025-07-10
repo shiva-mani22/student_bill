@@ -6,6 +6,7 @@ import About from "../components/user/Main/about/About";
 import FilterBills from "../components/user/Main/billFilter/FilterBills";
 import AddBills from "../components/user/Main/addBills/AddBills";
 import Home from "../components/user/Main/home/Home";
+import UpdateBills from "../components/user/Main/updateBills/UpdateBills";
 
 
 let routes=createBrowserRouter([
@@ -34,6 +35,9 @@ let routes=createBrowserRouter([
             },{
                 path:"addBills",
                 element:<AddBills></AddBills>
+            },{
+                path:"updateBills",
+                element:<UpdateBills></UpdateBills>
             }
         ]
     }
