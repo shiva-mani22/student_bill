@@ -65,6 +65,20 @@ let empServices={
             // console.log(error);
             return error
         }
+    },
+    deleteBills:async(token,id)=>{
+       try {
+            let data=await axiosInstance.delete(`/delete-bill/${id}`,{
+                headers:{
+                    "Authorization":`Bearer ${token}`
+                }
+            })
+
+            return data
+            
+        } catch (error) {
+            return error
+        }
     }
 }
 

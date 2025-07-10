@@ -1,13 +1,15 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { contextApi } from '../../../context/Context'
 import empServices from '../../../../service/empService'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
+import toast from 'react-hot-toast'
 
 const Home = () => {
   const {globalState}=useContext(contextApi)
   const [allBills,setAllBills]=useState([])
+  let {state}=useLocation()
   const navigate=useNavigate();
-  console.log(globalState.token);
+  // console.log(globalState.token);
   useEffect(()=>{
     (async ()=>{
       let data=await empServices.allBills(globalState.token)
@@ -16,12 +18,29 @@ const Home = () => {
      }
     })();
   },[])
-   console.log(allBills);
+  //  console.log(allBills);
 
   const handelUpateBills=(bill)=>{
     navigate("updateBills",{state:bill})
   }
 
+  const handelDeleteBills=(id)=>{
+    (async()=>{
+     try {
+      let data=await empServices.deleteBills(globalState.token,id)
+      console.log(data);
+      if(data.status==200){
+      toast.success(`${data.data.message}`)
+      setAllBills((preVal)=>preVal.filter((val)=>val._id!=data.data.bill._id))
+      }      else {
+        toast.error("something went wrong")
+      }
+     } catch (error) {
+        toast.error("something went wrong")
+     }
+      
+        })();
+  }
   return (
      <div className="w-full min-h-screen p-6 bg-gray-100 flex flex-wrap gap-6 justify-center">
       {allBills.map((bill, index) => (
@@ -41,7 +60,7 @@ const Home = () => {
               <button className='grow size-full bg-amber-500 rounded-sm' onClick={()=>{
                 handelUpateBills(bill)
               }}>Update</button>
-              <button className='grow size-full bg-red-500 rounded-sm'>Delete</button>
+              <button className='grow size-full bg-red-500 rounded-sm' onClick={() => {handelDeleteBills(bill._id)}}>Delete</button>
             </div>
         </div>
       ))}
